@@ -1,23 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="login-container">
-    <img src="{{ url_for('static', filename='logo.jpg') }}" alt="BLACKROCK logo" class="login-logo">
-
-    <h2>Admin Login</h2>
-    <form method="POST" class="form-wrap">
-      <label for="username">User ID:</label>
-      <input type="text" id="username" name="username" required>
-
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
-
-      <button type="submit">Login</button>
-    </form>
-
-    <div class="login-links">
-      <a href="{{ url_for('forgot_password') }}">Forgot Password?</a>
-      <a href="{{ url_for('change_password') }}">Change Password</a>
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="list-disc list-inside text-red-500 mb-4">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <form method="POST" action="{{ url_for('login') }}" class="space-y-4">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="username" name="username" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" name="password" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <button type="submit"
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Login
+            </button>
+        </form>
+        <div class="mt-6 text-center">
+            <!-- CHANGE THIS LINE -->
+            <a href="{{ url_for('change_password') }}" class="text-blue-600 hover:text-blue-800 text-sm">Change Password</a>
+        </div>
     </div>
-  </div>
+</div>
 {% endblock %}

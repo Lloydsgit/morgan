@@ -338,7 +338,7 @@ def auth():
             "payout_type": session['payout_type']
         }
 
-        try:
+try:
     response = requests.post(f"{ISO_ENDPOINT}/process_payment", json=payload)
     result = response.json()
 

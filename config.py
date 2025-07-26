@@ -13,7 +13,7 @@ WALLET_POOL = {
 ],
 "ERC20": [
 {
-"address": "	"0xF39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+"address": 	"0xF39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
 "private_key": "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce03752e33ecb29d9a7fdd3"
 }
 ]

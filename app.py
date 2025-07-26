@@ -254,22 +254,37 @@ def amount():
 @login_required
 def payout():
     if request.method == 'POST':
-        method = request.form['method']
-        session['payout_type'] = method
-
-        wallet = request.form.get(f'{method.lower()}_wallet', '').strip()
-        if method == 'ERC20' and (not wallet.startswith("0x") or len(wallet) != 42):
-            flash("Invalid ERC20 address format.")
+        method = request.form.get('method')
+        if not method:
+            flash("Please select a payout method.")
             return redirect(url_for('payout'))
 
-        elif method == 'TRC20' and (not wallet.startswith("T") or len(wallet) < 34):
-            flash("Invalid TRC20 address format.")
+        session['payout_type'] = method
+
+        # Fetch the appropriate wallet based on method
+        wallet = request.form.get(f'{method.lower()}_wallet', '').strip()
+
+        if method == 'ERC20':
+            if not wallet.startswith("0x") or len(wallet) != 42:
+                flash("Invalid ERC20 address format.")
+                return redirect(url_for('payout'))
+
+        elif method == 'TRC20':
+            if not wallet.startswith("T") or len(wallet) < 34:
+                flash("Invalid TRC20 address format.")
+                return redirect(url_for('payout'))
+
+        else:
+            flash("Unsupported payout method selected.")
             return redirect(url_for('payout'))
 
         session['wallet'] = wallet
         return redirect(url_for('card'))
 
-    return render_template('payout.html')
+    # Pass wallet values into form from config
+    return render_template('payout.html',
+        default_erc20_wallet=CONFIG.get('erc20_wallet'),
+        default_trc20_wallet=CONFIG.get('trc20_wallet'))
 
 @app.route('/card', methods=['GET', 'POST'])
 @login_required

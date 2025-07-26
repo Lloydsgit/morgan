@@ -1,15 +1,21 @@
 <!DOCTYPE html>
-<html>
-<head><title>Select Protocol</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Protocol</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 <body>
-  <h2>Select Protocol</h2>
-  <form method="post">
-    <select name="protocol">
-      {% for proto in protocols %}
-        <option value="{{ proto }}">{{ proto }}</option>
-      {% endfor %}
-    </select>
-    <button type="submit">Next</button>
-  </form>
+  <div class="container">
+    <h2>Select Terminal Protocol</h2>
+    <form method="post">
+      <select name="protocol" required>
+        {% for proto in protocols %}
+          <option value="{{ proto }}">{{ proto }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit">Next</button>
+    </form>
+  </div>
 </body>
 </html>

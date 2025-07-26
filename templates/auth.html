@@ -1,16 +1,22 @@
 <!DOCTYPE html>
-<html>
-<head><title>Authorization Code</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Authorization Code</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 <body>
-  <h2>Enter Authorization Code ({{ code_length }} digits)</h2>
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul>{% for msg in messages %}<li>{{ msg }}</li>{% endfor %}</ul>
-    {% endif %}
-  {% endwith %}
-  <form method="post">
-    Auth Code: <input type="text" name="auth_code" maxlength="{{ code_length }}"><br>
-    <button type="submit">Submit</button>
-  </form>
+  <div class="container">
+    <h2>Enter Authorization Code ({{ code_length }} digits)</h2>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>{% for msg in messages %}<li>{{ msg }}</li>{% endfor %}</ul>
+      {% endif %}
+    {% endwith %}
+    <form method="post">
+      <input type="text" name="auth_code" maxlength="{{ code_length }}" placeholder="Authorization Code" required>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 </body>
 </html>

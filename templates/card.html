@@ -1,18 +1,13 @@
-{% extends "base.html" %}
-{% block content %}
-<form method="POST" enctype="multipart/form-data" action="{{ url_for('card') }}" class="form-wrap">
-    <label>Card Number:</label>
-    <input type="text" name="pan" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" required>
-    <div id="drop_zone" style="border: 2px dashed #aaa; padding: 10px; margin: 10px 0;">
-        Drag & drop card image here or enter manually.
-    </div>
-    <label>Expiry (MM/YY):</label>
-    <input type="text" name="expiry" maxlength="5" placeholder="MM/YY" pattern="\d{2}/\d{2}" required>
-    <label>CVV:</label>
-    <input type="text" name="cvv" maxlength="4" required>
+<!DOCTYPE html>
+<html>
+<head><title>Card Details</title></head>
+<body>
+  <h2>Enter Card Details</h2>
+  <form method="post">
+    Card Number (PAN): <input type="text" name="pan"><br>
+    Expiry (MMYY): <input type="text" name="expiry"><br>
+    CVV: <input type="text" name="cvv"><br>
     <button type="submit">Next</button>
-</form>
-<script>
-    // Optionally add JS for drag-and-drop to fill the card number
-</script>
-{% endblock %}
+  </form>
+</body>
+</html>

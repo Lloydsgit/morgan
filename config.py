@@ -1,41 +1,50 @@
-# config.py — Round-robin wallet rotation setup
+Final config.py (with test + live support)
 
-from itertools import cycle
+config.py
+MODE = "test" # Change to "live" when deploying live system
 
-wallets = {
-    "USDT": {
-        "ERC20": cycle([
-            "0xWallet1ERC20",
-            "0xWallet2ERC20",
-            "0xWallet3ERC20",
-            "0xWallet4ERC20",
-            "0xWallet5ERC20"
-        ]),
-        "TRC20": cycle([
-            "TGWallet1TRC20",
-            "TGWallet2TRC20",
-            "TGWallet3TRC20",
-            "TGWallet4TRC20",
-            "TGWallet5TRC20"
-        ])
-    },
-    "USDC": {
-        "ERC20": cycle([
-            "0xWallet1USDC",
-            "0xWallet2USDC",
-            "0xWallet3USDC",
-            "0xWallet4USDC",
-            "0xWallet5USDC"
-        ]),
-        "TRC20": cycle([
-            "TGWallet1USDC",
-            "TGWallet2USDC",
-            "TGWallet3USDC",
-            "TGWallet4USDC",
-            "TGWallet5USDC"
-        ])
-    }
+WALLET_POOL = {
+"test": {
+"TRC20": [
+{
+"address": "TMnHdKzr6zciwYQVDuRn1k8aQ2HdWyhVzQ",
+"private_key": "a1b2c3d4e5f6g7h8i9j0dummytestkey123"
+}
+],
+"ERC20": [
+{
+"address": "0x1E0049783F008A0085193E00003D00cd54003c71",
+"private_key": "0xabcde12345678900deadbeef00feedface0011223344"
+}
+]
+},
+"live": {
+"TRC20": [
+{
+"address": "TLiveWalletAddressHere",
+"private_key": "LiveWalletPrivateKeyHere"
+}
+],
+"ERC20": [
+{
+"address": "0xLiveMainnetAddressHere",
+"private_key": "LiveMainnetPrivateKeyHere"
+}
+]
+}
 }
 
 def get_next_wallet(currency, payout_type):
-    return next(wallets[currency][payout_type])
+pool = WALLET_POOL[MODE].get(payout_type.upper(), [])
+if not pool:
+raise ValueError(f"No wallets found for {payout_type} in {MODE} mode.")
+import random
+return random.choice(pool)
+
+Network endpoints
+INFURA_URL = (
+"https://goerli.infura.io/v3/YOUR_PROJECT_ID" if MODE == "test"
+else "https://mainnet.infura.io/v3/YOUR_PROJECT_ID"
+)
+
+TRONGRID_API_KEY = "your-trongrid-api-key" # Optional for live

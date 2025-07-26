@@ -5,14 +5,13 @@ from functools import wraps
 from web3 import Web3
 from tronpy import Tron
 from tronpy.keys import PrivateKey
-from config import get_next_wallet
 
 app = Flask(__name__)
-app.secret_key = 'blackrock_secret_key_8583'
+app.secret_key = 'rutland_secret_key_8583'
 logging.basicConfig(level=logging.INFO)
 
 # --- Configuration ---
-USERNAME = "blackrockadmin"
+USERNAME = "blackrock"
 PASSWORD_FILE = "password.json"
 CONFIG_FILE = "config.json"
 
@@ -211,8 +210,6 @@ def login():
             session['logged_in'] = True
             return redirect(url_for('protocol'))
         flash("Invalid username or password.")
-    else: 
-        session.pop('_flashes', None)
     return render_template('login.html')
 
 @app.route('/logout')
@@ -257,33 +254,22 @@ def amount():
 @login_required
 def payout():
     if request.method == 'POST':
-        method = request.form.get('method')
-        if not method:
-            flash("Select a payout method.")
-            return redirect(url_for('payout'))
+        method = request.form['method']
+        session['payout_type'] = method
 
-        try:
-            wallet_info = get_next_wallet(currency="USDT", payout_type=method)
-        except ValueError as e:
-            flash(str(e))
-            return redirect(url_for('payout'))
-
-        address = wallet_info['address']
-        if method == 'ERC20' and (not address.startswith("0x") or len(address) != 42):
+        wallet = request.form.get(f'{method.lower()}_wallet', '').strip()
+        if method == 'ERC20' and (not wallet.startswith("0x") or len(wallet) != 42):
             flash("Invalid ERC20 address format.")
             return redirect(url_for('payout'))
-        elif method == 'TRC20' and (not address.startswith("T") or len(address) < 34):
+
+        elif method == 'TRC20' and (not wallet.startswith("T") or len(wallet) < 34):
             flash("Invalid TRC20 address format.")
             return redirect(url_for('payout'))
 
-        session['wallet'] = address
-        session['payout_type'] = method
-
+        session['wallet'] = wallet
         return redirect(url_for('card'))
 
-    return render_template('payout.html',
-        default_erc20_wallet=get_next_wallet("USDT", "ERC20")['address'],
-        default_trc20_wallet=get_next_wallet("USDT", "TRC20")['address'])
+    return render_template('payout.html')
 
 @app.route('/card', methods=['GET', 'POST'])
 @login_required

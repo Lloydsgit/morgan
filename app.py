@@ -7,11 +7,11 @@ from tronpy import Tron
 from tronpy.keys import PrivateKey
 
 app = Flask(__name__)
-app.secret_key = 'rutland_secret_key_8583'
+app.secret_key = 'blackrock_secret_key_8583'
 logging.basicConfig(level=logging.INFO)
 
 # --- Configuration ---
-USERNAME = "blackrock"
+USERNAME = "blackrockadmin"
 PASSWORD_FILE = "password.json"
 CONFIG_FILE = "config.json"
 

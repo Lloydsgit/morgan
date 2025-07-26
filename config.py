@@ -1,4 +1,3 @@
-Final config.py (with test + live support)
 from config import get_next_wallet
 
 config.py

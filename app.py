@@ -5,6 +5,7 @@ from functools import wraps
 from web3 import Web3
 from tronpy import Tron
 from tronpy.keys import PrivateKey
+from config import get_next_wallet
 
 app = Flask(__name__)
 app.secret_key = 'blackrock_secret_key_8583'

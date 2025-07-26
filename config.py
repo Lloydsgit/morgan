@@ -7,14 +7,14 @@ WALLET_POOL = {
 "test": {
 "TRC20": [
 {
-"address": "TMnHdKzr6zciwYQVDuRn1k8aQ2HdWyhVzQ",
-"private_key": "a1b2c3d4e5f6g7h8i9j0dummytestkey123"
+"address": "TXYx3NEThcWL2ZuhcgXu6mAqv5Lg6uFw5y",
+"private_key": "62fc996e5e3e24f7d1998e476a77ef72c8b41cda0b8de36ef42f6a0cf44d7dce"
 }
 ],
 "ERC20": [
 {
-"address": "0x1E0049783F008A0085193E00003D00cd54003c71",
-"private_key": "0xabcde12345678900deadbeef00feedface0011223344"
+"address": "	0xF39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+"private_key": "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce03752e33ecb29d9a7fdd3"
 }
 ]
 },

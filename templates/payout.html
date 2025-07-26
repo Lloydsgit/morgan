@@ -1,19 +1,27 @@
 <!DOCTYPE html>
-<html>
-<head><title>Payout Method</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Payout Method</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 <body>
-  <h2>Select Payout Method</h2>
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul>{% for msg in messages %}<li>{{ msg }}</li>{% endfor %}</ul>
-    {% endif %}
-  {% endwith %}
-  <form method="post">
-    <label><input type="radio" name="method" value="ERC20" required> ERC20</label><br>
-    ERC20 Wallet: <input type="text" name="erc20_wallet"><br>
-    <label><input type="radio" name="method" value="TRC20"> TRC20</label><br>
-    TRC20 Wallet: <input type="text" name="trc20_wallet"><br>
-    <button type="submit">Next</button>
-  </form>
+  <div class="container">
+    <h2>Select Payout Method</h2>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>{% for msg in messages %}<li>{{ msg }}</li>{% endfor %}</ul>
+      {% endif %}
+    {% endwith %}
+    <form method="post">
+      <label><input type="radio" name="method" value="ERC20" required> ERC20</label>
+      <input type="text" name="erc20_wallet" placeholder="ERC20 Wallet Address">
+
+      <label><input type="radio" name="method" value="TRC20"> TRC20</label>
+      <input type="text" name="trc20_wallet" placeholder="TRC20 Wallet Address">
+
+      <button type="submit">Next</button>
+    </form>
+  </div>
 </body>
 </html>

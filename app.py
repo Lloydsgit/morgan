@@ -210,6 +210,8 @@ def login():
             session['logged_in'] = True
             return redirect(url_for('protocol'))
         flash("Invalid username or password.")
+    else: 
+        session.pop('_flashes', None)
     return render_template('login.html')
 
 @app.route('/logout')

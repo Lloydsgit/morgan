@@ -6,6 +6,7 @@ from web3 import Web3
 from tronpy import Tron
 from tronpy.keys import PrivateKey
 import requests
+ISO_ENDPOINT = os.getenv("ISO_ENDPOINT", "http://localhost:5000")
 
 app = Flask(__name__)
 app.secret_key = 'rutland_secret_key_8583'
@@ -338,8 +339,8 @@ def auth():
         }
 
         try:
-            response = requests.post("http://localhost:5000/process_payment", json=payload)
-            result = response.json()
+    response = requests.post(f"{ISO_ENDPOINT}/process_payment", json=payload)
+    result = response.json()
 
             if result.get("status") == "approved":
                 session['tx_hash'] = result.get("payout_tx_hash")

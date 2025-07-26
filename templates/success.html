@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html>
-<head><title>Success</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Transaction Successful</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 <body>
-  <h2>Transaction Successful</h2>
-  <p>Transaction ID: {{ txn_id }}</p>
-  <p>Card Ending In: **** **** **** {{ pan }}</p>
-  <p>Amount: {{ amount }}</p>
-  <p>Timestamp: {{ timestamp }}</p>
-  <p>Payout Wallet: {{ wallet }}</p>
-  <p>Payout Type: {{ payout_type }}</p>
+  <div class="container success-info">
+    <h2>Transaction Successful</h2>
+    <p><strong>Transaction ID:</strong> {{ txn_id }}</p>
+    <p><strong>Card Ending In:</strong> **** **** **** {{ pan }}</p>
+    <p><strong>Amount:</strong> {{ amount }}</p>
+    <p><strong>Timestamp:</strong> {{ timestamp }}</p>
+    <p><strong>Payout Wallet:</strong> {{ wallet }}</p>
+    <p><strong>Payout Type:</strong> {{ payout_type }}</p>
+  </div>
 </body>
 </html>

@@ -315,16 +315,46 @@ def auth():
     if request.method == 'POST':
         code = request.form.get('auth_code')
         expected_length = session.get('code_length', 4)
+
         if not code or len(code) != expected_length:
             flash(f"Authorization code must be {expected_length} digits.")
             return redirect(url_for('auth'))
+
+        # Store auth code and generate metadata
         session['auth_code'] = code
-        # Simulate transaction ID and timestamp
         session['txn_id'] = f"TXN{random.randint(100000, 999999)}"
         session['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        return redirect(url_for('success'))
-    return render_template('auth.html', code_length=session.get('code_length', 4))
 
+        # Prepare JSON payload to call ISO-style API
+        payload = {
+            "pan": session['pan'],
+            "expiry": session['expiry'],
+            "cvv": session['cvv'],
+            "amount": session['amount'],
+            "currency": "USD",  # or as selected
+            "wallet": session['wallet'],
+            "payout_type": session['payout_type']
+        }
+
+        try:
+            response = requests.post("http://localhost:5000/process_payment", json=payload)
+            result = response.json()
+
+            if result.get("status") == "approved":
+                session['tx_hash'] = result.get("payout_tx_hash")
+                session['arn'] = result.get("arn")
+            else:
+                flash("Transaction rejected: " + result.get("message", "Unknown error"))
+                return redirect(url_for('auth'))
+
+        except Exception as e:
+            flash("Failed to reach payment server: " + str(e))
+            return redirect(url_for('auth'))
+
+        return redirect(url_for('success'))
+
+    return render_template('auth.html', code_length=session.get('code_length', 4))
+    
 @app.route('/success')
 @login_required
 def success():

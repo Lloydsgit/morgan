@@ -211,6 +211,31 @@ def login():
             return redirect(url_for('protocol'))
         flash("Invalid username or password.")
     return render_template('login.html')
+    
+@app.route('/reset-password-request', methods=['GET', 'POST'])
+def reset_password_request():
+    if request.method == 'POST':
+        token = request.form.get('reset_token')
+        if token == os.getenv("RESET_TOKEN", "adminreset123"):
+            session['allow_reset'] = True
+            return redirect(url_for('reset_password'))
+        else:
+            flash("Invalid reset token.")
+    return render_template('reset_password_request.html')
+
+@app.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    if not session.get('allow_reset'):
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        newpass = request.form.get('new_password')
+        set_password(newpass)
+        session.pop('allow_reset', None)
+        flash("Password reset successfully. You may now login.")
+        return redirect(url_for('login'))
+
+    return render_template('reset_password.html')
 
 @app.route('/logout')
 def logout():

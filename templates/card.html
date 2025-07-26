@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html>
-<head><title>Card Details</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Enter Card Details</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 <body>
-  <h2>Enter Card Details</h2>
-  <form method="post">
-    Card Number (PAN): <input type="text" name="pan"><br>
-    Expiry (MMYY): <input type="text" name="expiry"><br>
-    CVV: <input type="text" name="cvv"><br>
-    <button type="submit">Next</button>
-  </form>
+  <div class="container">
+    <h2>Enter Card Details</h2>
+    <form method="post">
+      <input type="text" name="pan" placeholder="Card Number (PAN)" required>
+      <input type="text" name="expiry" placeholder="Expiry MMYY" required>
+      <input type="text" name="cvv" placeholder="CVV" required>
+      <button type="submit">Next</button>
+    </form>
+  </div>
 </body>
 </html>

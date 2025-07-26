@@ -1,4 +1,5 @@
 Final config.py (with test + live support)
+from config import get_next_wallet
 
 config.py
 MODE = "test" # Change to "live" when deploying live system

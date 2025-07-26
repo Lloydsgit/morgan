@@ -13,7 +13,7 @@ WALLET_POOL = {
 ],
 "ERC20": [
 {
-"address": "	0xF39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+"address": "	"0xF39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
 "private_key": "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce03752e33ecb29d9a7fdd3"
 }
 ]
@@ -21,14 +21,14 @@ WALLET_POOL = {
 "live": {
 "TRC20": [
 {
-"address": "TLiveWalletAddressHere",
-"private_key": "LiveWalletPrivateKeyHere"
+"address": "TXYx3NEThcWL2ZuhcgXu6mAqv5Lg6uFw5y",
+"private_key": "62fc996e5e3e24f7d1998e476a77ef72c8b41cda0b8de36ef42f6a0cf44d7dce"
 }
 ],
 "ERC20": [
 {
-"address": "0xLiveMainnetAddressHere",
-"private_key": "LiveMainnetPrivateKeyHere"
+"address": "0xF39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+"private_key": "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce03752e33ecb29d9a7fdd3"
 }
 ]
 }

@@ -342,16 +342,16 @@ try:
     response = requests.post(f"{ISO_ENDPOINT}/process_payment", json=payload)
     result = response.json()
 
-            if result.get("status") == "approved":
-                session['tx_hash'] = result.get("payout_tx_hash")
-                session['arn'] = result.get("arn")
-            else:
-                flash("Transaction rejected: " + result.get("message", "Unknown error"))
-                return redirect(url_for('auth'))
+    if result.get("status") == "approved":
+        session['tx_hash'] = result.get("payout_tx_hash")
+        session['arn'] = result.get("arn")
+    else:
+        flash("Transaction rejected: " + result.get("message", "Unknown error"))
+        return redirect(url_for('auth'))
 
-        except Exception as e:
-            flash("Failed to reach payment server: " + str(e))
-            return redirect(url_for('auth'))
+except Exception as e:
+    flash("Failed to reach payment server: " + str(e))
+    return redirect(url_for('auth'))
 
         return redirect(url_for('success'))
 

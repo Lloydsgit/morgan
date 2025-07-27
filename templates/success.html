@@ -1,60 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Transaction Successful</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    .success-info {
-      max-width: 500px;
-      margin: 40px auto;
-      padding: 20px;
-      background: #e6ffed;
-      border: 1px solid #b2dfdb;
-      border-radius: 10px;
-      text-align: center;
-    }
-    .success-info h2 {
-      color: #2e7d32;
-    }
-    .buttons {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-    }
-    .buttons button,
-    .buttons a {
-      padding: 10px 20px;
-      border: none;
-      background-color: #2e7d32;
-      color: white;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .buttons button:hover,
-    .buttons a:hover {
-      background-color: #1b5e20;
-    }
-  </style>
-</head>
-<body>
-  <div class="container success-info" id="receipt">
-    <h2>Transaction Successful</h2>
-    <p><strong>Transaction ID:</strong> {{ txn_id }}</p>
-    <p><strong>Card Ending In:</strong> **** **** **** {{ pan }}</p>
-    <p><strong>Amount:</strong> {{ amount }}</p>
-    <p><strong>Timestamp:</strong> {{ timestamp }}</p>
-    <p><strong>Payout Wallet:</strong> {{ wallet }}</p>
-    <p><strong>Payout Type:</strong> {{ payout_type }}</p>
-  </div>
+{% extends 'layout.html' %}
 
-  <div class="buttons">
-    <button onclick="window.print()">Print</button>
-    <a href="{{ url_for('new_transaction') }}">New Transaction</a>
-    <a href="{{ url_for('home') }}">Home</a>
-  </div>
-</body>
-</html>
+{% block content %}
+<div class="bg-white rounded-lg shadow p-6 max-w-3xl mx-auto">
+    <h2 class="text-2xl font-semibold text-green-600 mb-4">
+        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+        Transaction Successful
+    </h2>
+
+    <div class="space-y-2 text-gray-700 text-sm">
+        <p><strong>Transaction ID:</strong> {{ txn_id }}</p>
+        <p><strong>Card Ending In:</strong> **** **** **** {{ pan }}</p>
+        <p><strong>Amount:</strong> {{ amount }}</p>
+        <p><strong>Timestamp:</strong> {{ timestamp }}</p>
+        <p><strong>Payout Wallet:</strong> {{ wallet }}</p>
+        <p><strong>Payout Type:</strong> {{ payout_type }}</p>
+    </div>
+
+    <div class="flex justify-between mt-6">
+        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded shadow">
+            <i class="fas fa-print mr-1"></i> Print
+        </button>
+        <a href="{{ url_for('new_transaction') }}" class="bg-gray-800 hover:bg-gray-900 text-white font-medium px-4 py-2 rounded shadow">
+            <i class="fas fa-plus-circle mr-1"></i> New Transaction
+        </a>
+        <a href="{{ url_for('home') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium px-4 py-2 rounded shadow">
+            <i class="fas fa-home mr-1"></i> Home
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -4,9 +4,44 @@
   <meta charset="UTF-8">
   <title>Transaction Successful</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .success-info {
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #e6ffed;
+      border: 1px solid #b2dfdb;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .success-info h2 {
+      color: #2e7d32;
+    }
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    .buttons button,
+    .buttons a {
+      padding: 10px 20px;
+      border: none;
+      background-color: #2e7d32;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .buttons button:hover,
+    .buttons a:hover {
+      background-color: #1b5e20;
+    }
+  </style>
 </head>
 <body>
-  <div class="container success-info">
+  <div class="container success-info" id="receipt">
     <h2>Transaction Successful</h2>
     <p><strong>Transaction ID:</strong> {{ txn_id }}</p>
     <p><strong>Card Ending In:</strong> **** **** **** {{ pan }}</p>
@@ -14,6 +49,12 @@
     <p><strong>Timestamp:</strong> {{ timestamp }}</p>
     <p><strong>Payout Wallet:</strong> {{ wallet }}</p>
     <p><strong>Payout Type:</strong> {{ payout_type }}</p>
+  </div>
+
+  <div class="buttons">
+    <button onclick="window.print()">Print</button>
+    <a href="{{ url_for('new_transaction') }}">New Transaction</a>
+    <a href="{{ url_for('home') }}">Home</a>
   </div>
 </body>
 </html>

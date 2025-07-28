@@ -372,7 +372,7 @@ def auth():
         }
 
        try:
-    response = requests.post(f"{ISO_ENDPOINT}/process_payment", json=payload, timeout=10)
+           response = requests.post(f"{ISO_ENDPOINT}/process_payment", json=payload, timeout=10)
 
     # 🔴 This line is missing!
     result = response.json()  # ✅ Add this

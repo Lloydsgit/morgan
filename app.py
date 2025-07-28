@@ -372,8 +372,7 @@ def auth():
         }
 
         try:
-            response = requests.post(f"{ISO_ENDPOINT}/process_payment", json=payload)
-            result = response.json()
+            response = requests.post(f"{ISO_ENDPOINT}/process_payment", json=payload, timeout=10)
 
             if result.get("status") == "approved":
                 session['tx_hash'] = result.get("payout_tx_hash")
@@ -390,16 +389,15 @@ def auth():
 
     return render_template('auth.html', code_length=session.get('code_length', 4))
     
-@app.route('/success')
-@login_required
+@app.route("/success")
 def success():
-    return render_template('success.html',
-        txn_id=session.get('txn_id'),
-        pan=session.get('pan', '')[-4:],
-        amount=session.get('amount'),
-        timestamp=session.get('timestamp'),
-        wallet=session.get('wallet'),
-        payout_type=session.get('payout_type'))
+    return render_template("success.html",
+                           txn_id=session.get('txn_id'),
+                           pan=session.get('pan'),
+                           amount=session.get('amount'),
+                           timestamp=session.get('timestamp'),
+                           wallet=session.get('wallet'),
+                           payout_type=session.get('payout_type'))
 
 @app.route('/rejected/<code>/<reason>')
 def rejected(code, reason):

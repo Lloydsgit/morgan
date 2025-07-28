@@ -182,7 +182,7 @@ def send_erc20_payout(private_key, to_address, amount, contract_address, infura_
 
 # --- TRC20 Payout Function ---
 def send_trc20_payout(tron_private_key, to_address, amount, contract_address, network='mainnet'):
-    client = Tron(network=network)
+    client = Tron(network=network, api_key=os.getenv("TRONGRID_API_KEY"))
     priv_key = PrivateKey(bytes.fromhex(tron_private_key))
     contract = client.get_contract(contract_address)
     decimals = contract.functions.decimals()
@@ -194,8 +194,20 @@ def send_trc20_payout(tron_private_key, to_address, amount, contract_address, ne
         .build()
         .sign(priv_key)
     )
-    result = txn.broadcast()
-    return result['txid']
+    # Ensure destination address exists on TRON network
+try:
+    _ = client.get_account(to_address)
+except:
+    raise Exception(f"Account [{to_address}] does not exist")
+
+# Broadcast transaction
+result = txn.broadcast()
+
+# Handle potential bandwidth error
+if result.get('code') == 'BANDWIDTH_ERROR':
+    raise Exception("Account resource insufficient error (BANDWIDTH_ERROR). Ensure the sender has enough TRX for fees.")
+
+return result['txid']
 
 # --- Flask Routes ---
 

@@ -371,18 +371,20 @@ def auth():
             "payout_type": session['payout_type']
         }
 
-       try:
-           response = requests.post(f"{ISO_ENDPOINT}/process_payment", json=payload, timeout=10)
+        try:
+            response = requests.post(f"{ISO_ENDPOINT}/process_payment", json=payload, timeout=10)
+            result = response.json()
 
-    # 🔴 This line is missing!
-    result = response.json()  # ✅ Add this
+            if result.get("status") == "approved":
+                session['tx_hash'] = result.get("payout_tx_hash")
+                session['arn'] = result.get("arn")
+            else:
+                flash("Transaction rejected: " + result.get("message", "Unknown error"))
+                return redirect(url_for('auth'))
 
-    if result.get("status") == "approved":
-        session['tx_hash'] = result.get("payout_tx_hash")
-        session['arn'] = result.get("arn")
-    else:
-        flash("Transaction rejected: " + result.get("message", "Unknown error"))
-        return redirect(url_for('auth'))
+        except Exception as e:
+            flash(f"Error during transaction: {str(e)}")
+            return redirect(url_for('auth'))
 
     return render_template('auth.html', code_length=session.get('code_length', 4))
     

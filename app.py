@@ -403,6 +403,10 @@ def success():
 def rejected(code, reason):
     return render_template('rejected.html', code=code, reason=reason)
 
+@app.route('/health')
+def health_check():
+    return "OK", 200
+
 # --- Main ---
 
 if __name__ == '__main__':

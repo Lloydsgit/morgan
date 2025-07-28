@@ -378,6 +378,7 @@ def auth():
             if result.get("status") == "approved":
                 session['tx_hash'] = result.get("payout_tx_hash")
                 session['arn'] = result.get("arn")
+                return redirect(url_for('success'))
             else:
                 flash("Transaction rejected: " + result.get("message", "Unknown error"))
                 return redirect(url_for('auth'))

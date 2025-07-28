@@ -181,33 +181,53 @@ def send_erc20_payout(private_key, to_address, amount, contract_address, infura_
     return web3.toHex(tx_hash)
 
 # --- TRC20 Payout Function ---
-def send_trc20_payout(tron_private_key, to_address, amount, contract_address, network='mainnet'):
-    client = Tron(network=network, api_key=os.getenv("TRONGRID_API_KEY"))
-    priv_key = PrivateKey(bytes.fromhex(tron_private_key))
-    contract = client.get_contract(contract_address)
-    decimals = contract.functions.decimals()
+def send_tron(to_address: str, amount: Decimal) -> str:
+    from tronpy import Tron
+    from tronpy.providers import HTTPProvider
+    from tronpy.keys import PrivateKey
+    import os
+
+    tron_private_key = os.getenv("TRC20_PRIVATE_KEY")
+    token_contract = os.getenv("TRC20_CONTRACT_ADDRESS")
+    tron_api_key = os.getenv("TRON_API_KEY")
+
+    client = Tron(
+        provider=HTTPProvider(endpoint_uri="https://api.trongrid.io", api_key=tron_api_key),
+        network="mainnet"
+    )
+
+    pk = PrivateKey(bytes.fromhex(tron_private_key))
+    contract = client.get_contract(token_contract)
+
+    try:
+        decimals_func = contract.functions.decimals
+        decimals = decimals_func() if callable(decimals_func) else decimals_func
+    except Exception:
+        decimals = 6  # Fallback
+
     amt = int(float(amount) * (10 ** decimals))
+
     txn = (
         contract.functions.transfer(to_address, amt)
-        .with_owner(priv_key.public_key.to_base58check_address())
+        .with_owner(pk.public_key.to_base58check_address())
         .fee_limit(1_000_000)
         .build()
-        .sign(priv_key)
+        .sign(pk)
     )
-    # Ensure destination address exists on TRON network
-try:
-    _ = client.get_account(to_address)
-except:
-    raise Exception(f"Account [{to_address}] does not exist")
 
-# Broadcast transaction
-result = txn.broadcast()
+    try:
+        _ = client.get_account(to_address)
+    except:
+        raise Exception(f"Account [{to_address}] does not exist")
 
-# Handle potential bandwidth error
-if result.get('code') == 'BANDWIDTH_ERROR':
-    raise Exception("Account resource insufficient error (BANDWIDTH_ERROR). Ensure the sender has enough TRX for fees.")
+    # Broadcast transaction
+    result = txn.broadcast()
 
-return result['txid']
+    # Handle potential bandwidth error
+    if result.get('code') == 'BANDWIDTH_ERROR':
+        raise Exception("Account resource insufficient error (BANDWIDTH_ERROR). Ensure the sender has enough TRX for fees.")
+
+    return result['txid']  # ✅ Must be inside the function
 
 # --- Flask Routes ---
 

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, url_for, send_file, flash
 import random, logging, qrcode, io, os, json, hashlib, re, socket, threading
 from datetime import datetime
+from decimal import Decimal
 from functools import wraps
 from web3 import Web3
 from tronpy import Tron

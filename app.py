@@ -6,19 +6,19 @@ from functools import wraps
 from web3 import Web3
 from tronpy import Tron
 from tronpy.keys import PrivateKey
+from tronpy.providers import HTTPProvider
 import requests
+
 ISO_ENDPOINT = os.getenv("ISO_ENDPOINT", "http://localhost:5000")
 
 app = Flask(__name__)
 app.secret_key = 'rutland_secret_key_8583'
 logging.basicConfig(level=logging.INFO)
 
-# --- Configuration ---
 USERNAME = "blackrock"
 PASSWORD_FILE = "password.json"
 CONFIG_FILE = "config.json"
 
-# Ensure password file exists
 if not os.path.exists(PASSWORD_FILE):
     with open(PASSWORD_FILE, "w") as f:
         hashed = hashlib.sha256("Br_3339".encode()).hexdigest()
@@ -43,7 +43,6 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated
 
-# Dummy card database (unchanged)
 DUMMY_CARDS = {
     "4114755393849011": {"expiry": "0926", "cvv": "363", "auth": "1942", "type": "POS-101.1"},
     "4000123412341234": {"expiry": "1126", "cvv": "123", "auth": "4021", "type": "POS-101.1"},
@@ -65,7 +64,7 @@ DUMMY_CARDS = {
 PROTOCOLS = {
     "POS Terminal -101.1 (4-digit approval)": 4,
     "POS Terminal -101.4 (6-digit approval)": 6,
-    "POS Terminal -101.6 (Pre-authorization)": 6,
+    "POS Terminal -201.1 (6-digit approval)": 6,
     "POS Terminal -101.7 (4-digit approval)": 4,
     "POS Terminal -101.8 (PIN-LESS transaction)": 4,
     "POS Terminal -201.1 (6-digit approval)": 6,
@@ -82,7 +81,6 @@ FIELD_39_RESPONSES = {
     "92": "Invalid Terminal Protocol"
 }
 
-# Load or create config.json with default wallets for payouts
 def load_config():
     if not os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, "w") as f:
@@ -408,6 +406,5 @@ def health_check():
     return "OK", 200
 
 # --- Main ---
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)

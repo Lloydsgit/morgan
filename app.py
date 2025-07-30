@@ -114,9 +114,16 @@ def iso8583_server_thread(host=ISO_SERVER_HOST, port=ISO_SERVER_PORT):
                             break
                         logging.info(f"Received ISO8583 data: {data}")
 
-                        # Simulate ISO8583 Authorization Response
+                        data_str = data.decode(errors='ignore').strip()
+
+                        # Detect HTTP request and ignore/close connection
+                        if data_str.startswith(("GET ", "POST ", "HEAD ", "OPTIONS ")):
+                            logging.warning(f"Received HTTP request on ISO8583 port from {addr}, closing connection.")
+                            break  # Close connection
+
+                        # Process ISO8583 JSON message
                         try:
-                            msg = json.loads(data.decode(errors='ignore'))
+                            msg = json.loads(data_str)
                             pan = msg.get("pan")
                             expiry = msg.get("expiry")
                             cvv = msg.get("cvv")
@@ -139,8 +146,9 @@ def iso8583_server_thread(host=ISO_SERVER_HOST, port=ISO_SERVER_PORT):
 
                         response_raw = json.dumps(response).encode()
                         conn.sendall(response_raw)
-    threading.Thread(target=server, daemon=True).start()
 
+    threading.Thread(target=server, daemon=True).start()
+    
 iso8583_server_thread()
 
 # --- CRYPTO PAYOUT FUNCTIONS ---

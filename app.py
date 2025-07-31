@@ -28,6 +28,7 @@ PASSWORD_FILE = "password.json"
 CONFIG_FILE = "config.json"
 
 # ISO8583 TCP Server config
+# This port will be internal to your Render service, not publicly exposed.
 ISO_SERVER_HOST = "0.0.0.0"
 ISO_SERVER_PORT = 8583
 
@@ -120,6 +121,8 @@ CONFIG = load_config()
 def iso8583_server_thread(host=ISO_SERVER_HOST, port=ISO_SERVER_PORT):
     def server():
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            # Set SO_REUSEADDR to allow immediate reuse of the port
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.bind((host, port))
             s.listen()
             logging.info(f"ISO8583 Server listening on {host}:{port}")
@@ -138,6 +141,7 @@ def iso8583_server_thread(host=ISO_SERVER_HOST, port=ISO_SERVER_PORT):
                         # Detect HTTP request and ignore/close connection
                         if data_str.startswith(("GET ", "POST ", "HEAD ", "OPTIONS ")):
                             logging.warning(f"Received HTTP request on ISO8583 port from {addr}, closing connection.")
+                            # No response for HTTP requests, just close the connection
                             break  # Close connection
 
                         # Process ISO8583 JSON message
@@ -159,8 +163,11 @@ def iso8583_server_thread(host=ISO_SERVER_HOST, port=ISO_SERVER_PORT):
                             else:
                                 response = {"approved": True, "field39": "00"}
 
+                        except json.JSONDecodeError:
+                            logging.error(f"Invalid JSON received on ISO8583 port from {addr}: {data_str}")
+                            response = {"approved": False, "field39": "99"} # System Error
                         except Exception as e:
-                            logging.error(f"Error parsing ISO8583 request: {e}")
+                            logging.error(f"Error processing ISO8583 request: {e}")
                             response = {"approved": False, "field39": "99"}
 
                         response_raw = json.dumps(response).encode()
@@ -484,6 +491,7 @@ def rejected(code, reason):
 
 @app.route('/health')
 def health_check():
+    # This endpoint is crucial for Render's health checks
     return "OK", 200
 
 # --- PASSWORD RESET ---
@@ -516,4 +524,7 @@ def reset_password():
 # --- RUN APP ---
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    # Render provides the PORT environment variable.
+    # Your Flask app MUST listen on this port to be accessible as a web service.
+    port = int(os.getenv("PORT", 5000)) # Default to 5000 for local testing if PORT not set
+    app.run(host="0.0.0.0", port=port, debug=True)
